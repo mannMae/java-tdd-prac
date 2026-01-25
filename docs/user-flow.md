@@ -1,3 +1,7 @@
+# 💵 Multi-Currency Money TDD Practice
+
+## 🗺️ User Flow (v1.0)
+```mermaid
 graph TD
     Start([자산 입력 시작]) --> Input[금액 및 통화 설정]
     Input --> Check{금액 유효성 검사}
