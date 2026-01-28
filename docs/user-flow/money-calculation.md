@@ -2,21 +2,14 @@
 
 ## User Flow (v1.0)
 
-
 ```mermaid
 graph TD
-    Start([자산 입력 시작]) --> Input[금액 및 통화 설정]
-    Input --> Check{금액 유효성 검사}
-
-    %% [수정된 부분] 에러 발생 시 다시 입력으로 이동
-    Check -- "마이너스/비숫자" --> Error[에러 메세지 출력]
-    Error -- "재시도" --> Input
-
-    Check -- "정상" --> Logic[연산 및 환율 적용]
-
-    Logic --> Policy{소수점 정책: 내림}
-    Policy -- "결과 도출" --> End([최종 합산 결과 출력])
-
-    %% 스타일링
-    style Error fill:#f96,stroke:#333
-    style End fill:#bbf,stroke:#333
+    A[입력: 5 USD] --> B{통화 확인: USD?}
+    B -- Yes --> C[달러 연산 로직: 5 * 2]
+    B -- No --> D[지원하지 않는 통화 에러]
+    
+    C --> E[결과 객체 생성: 10 USD]
+    E --> F{기대값과 비교: 10 USD?}
+    
+    F -- 일치 --> G[최종 결과 성공 반환]
+    F -- 불일치 --> H[테스트 실패]
