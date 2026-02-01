@@ -11,7 +11,7 @@ graph LR
 
 ## User Scenario (Gherkin)
 ```gherkin
-Feature: Dollaar Calculation
+Feature: Dollar Calculation
 
     Scenario: Single currency multiplication
         Given I have 5 USD
