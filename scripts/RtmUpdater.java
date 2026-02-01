@@ -28,37 +28,27 @@ public class RtmUpdater {
         for (File file : xmlFiles) {
             String content = Files.readString(file.toPath());
 
-            // Regex to find testcase elements: <testcase ... classname="X" name="Y" ... >
-            Pattern pattern = Pattern.compile("<testcase[^>]*classname=\"([^\"]*)\"[^>]*name=\"([^\"]*)\"[^>]*>");
-            Matcher matcher = pattern.matcher(content);
+            // Regex to find testcase tags
+            Pattern testcasePattern = Pattern.compile("<testcase([^>]*)>");
+            Matcher testcaseMatcher = testcasePattern.matcher(content);
 
-            while (matcher.find()) {
-                String classname = matcher.group(1);
-                String methodname = matcher.group(2);
+            while (testcaseMatcher.find()) {
+                String attributes = testcaseMatcher.group(1);
+
+                // Extract classname and name from attributes
+                String classname = getAttribute(attributes, "classname");
+                String methodname = getAttribute(attributes, "name");
+
+                if (classname == null || methodname == null)
+                    continue;
+
                 String simpleClassName = classname.substring(classname.lastIndexOf('.') + 1);
                 String fullName = simpleClassName + "." + methodname;
 
-                // Naive Failure/Error Detection logic usually valid for surefire xml
-                // If the XML content contains failure/error tags, we should be careful.
-                // Ideally we check if <failure> is nested inside the testcase, but Regex is
-                // limited.
-                // However, Surefire XML usually puts the failure message attribute inside the
-                // failure tag which follows testcase.
-
                 String status = "✅ PASS";
-                // Broad check: If file contains failure/error, and we are in strict mode,
-                // simpler to flag it.
-                // Refined check: Look for the specific test name followed by failure in the
-                // file content? Hard with simple regex.
 
-                // Let's use the 'failures' and 'errors' attribute from testsuite tag for
-                // file-level check
-                // <testsuite ... failures="1" ...>
-                if (content.contains("failures=\"0\"") && content.contains("errors=\"0\"")) {
-                    status = "✅ PASS";
-                } else {
-                    // File has failures. Is it THIS test?
-                    // Safe bet for now: If the SUITE fails, mark its methods as FAIL/CHECK
+                // Check for failures/errors in the SUITE (simplest approach for strict TDD)
+                if (!content.contains("failures=\"0\"") || !content.contains("errors=\"0\"")) {
                     status = "❌ FAIL";
                 }
 
@@ -67,6 +57,15 @@ public class RtmUpdater {
         }
 
         updateRtmFile(results);
+    }
+
+    private static String getAttribute(String text, String key) {
+        Pattern p = Pattern.compile(key + "=\"([^\"]*)\"");
+        Matcher m = p.matcher(text);
+        if (m.find()) {
+            return m.group(1);
+        }
+        return null;
     }
 
     private static void updateRtmFile(Map<String, String> results) throws IOException {
