@@ -6,4 +6,4 @@
 
 | Req ID | Feature | Spec ID (User Flow) | Test Method | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **REQ-001** | 단일 통화 곱셈 | [FLOW-001](./user-flow/money-calculation.md) | `MoneyTest.testMultiplication` | ❌ WAITING |
+| **REQ-001** | 단일 통화 곱셈 | [FLOW-001](./user-flow/money-calculation.md) | `MoneyTest.testMultiplication` | ✅ PASS |
