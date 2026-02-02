@@ -24,4 +24,4 @@
 
 | Req ID | Feature | Spec ID (User Flow) | Test Method | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| REQ-001 | 단일 통화 곱셈 | [SPEC-FLOW-001](./specs/money-calculation.md) |  | In Progress |
+| REQ-001 | 단일 통화 곱셈 | [SPEC-FLOW-001](./specs/money-calculation.md) | `MoneyTest.testMultiplication` | ✅ PASS |

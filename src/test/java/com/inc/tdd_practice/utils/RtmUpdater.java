@@ -1,3 +1,5 @@
+package com.inc.tdd_practice.utils;
+
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
@@ -47,8 +49,8 @@ public class RtmUpdater {
 
                 String status = "✅ PASS";
 
-                // Check for failures/errors in the SUITE (simplest approach for strict TDD)
-                if (!content.contains("failures=\"0\"") || !content.contains("errors=\"0\"")) {
+                // Check for failures/errors in the SUITE
+                if (content.contains("<failure") || content.contains("<error")) {
                     status = "❌ FAIL";
                 }
 
@@ -87,7 +89,7 @@ public class RtmUpdater {
 
                     if (line.contains("`" + method + "`")) {
                         // Replace the status column (assuming it's the last one)
-                        // Regex: Replace content between last pair of pipes
+                        // Regex: Replace content after the last pipe before the closing pipe
                         line = line.replaceAll("\\|\\s*[^|]+\\s*\\|$", "| " + status + " |");
                         updateCount++;
                         break;
