@@ -1,6 +1,6 @@
 # Multi-Currency Money Calculation
 
-## User Flow (v1.0)
+## User Flow (v1.0) [SPEC-FLOW-001]
 
 ```mermaid
 graph LR
