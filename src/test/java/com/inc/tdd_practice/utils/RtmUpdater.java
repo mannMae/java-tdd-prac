@@ -13,52 +13,71 @@ public class RtmUpdater {
     public static void main(String[] args) throws IOException {
         System.out.println("🔍 Scanning test results in " + REPORT_DIR + "...");
 
-        File reportDir = new File(REPORT_DIR);
-        if (!reportDir.exists()) {
-            System.err.println("Report directory not found. Please run tests first: ./mvnw test");
-            System.exit(1);
-        }
+        Map<String, String> results = scanTestReports();
+        updateRtmFile(results);
+    }
 
+    private static Map<String, String> scanTestReports() throws IOException {
         Map<String, String> results = new HashMap<>();
+        File reportDir = new File(REPORT_DIR);
+
+        if (!reportDir.exists()) {
+            System.err.println("⚠️ Report directory not found. Please run tests first: ./mvnw test");
+            return results;
+        }
 
         File[] xmlFiles = reportDir.listFiles((dir, name) -> name.endsWith(".xml"));
         if (xmlFiles == null || xmlFiles.length == 0) {
             System.out.println("No test report XML files found.");
-            return;
+            return results;
         }
 
         for (File file : xmlFiles) {
             String content = Files.readString(file.toPath());
 
-            // Regex to find testcase tags
-            Pattern testcasePattern = Pattern.compile("<testcase([^>]*)>");
-            Matcher testcaseMatcher = testcasePattern.matcher(content);
+            // Extract individual testcase blocks
+            Pattern tcPattern = Pattern.compile("<testcase\\s+([^>]+)>(.*?)</testcase>", Pattern.DOTALL);
+            Matcher tcMatcher = tcPattern.matcher(content);
 
-            while (testcaseMatcher.find()) {
-                String attributes = testcaseMatcher.group(1);
+            // Also check for empty testcase tags like <testcase ... />
+            Pattern tcEmptyPattern = Pattern.compile("<testcase\\s+([^/>]+)/>");
 
-                // Extract classname and name from attributes
-                String classname = getAttribute(attributes, "classname");
-                String methodname = getAttribute(attributes, "name");
+            parseTestCases(tcMatcher, results, false);
 
-                if (classname == null || methodname == null)
-                    continue;
+            tcMatcher = tcEmptyPattern.matcher(content);
+            parseTestCases(tcMatcher, results, true);
+        }
+        return results;
+    }
 
-                String simpleClassName = classname.substring(classname.lastIndexOf('.') + 1);
-                String fullName = simpleClassName + "." + methodname;
+    private static void parseTestCases(Matcher matcher, Map<String, String> results, boolean isEmptyTag) {
+        while (matcher.find()) {
+            String attributes = matcher.group(1);
+            String classname = getAttribute(attributes, "classname");
+            String methodname = getAttribute(attributes, "name");
 
-                String status = "✅ PASS";
+            if (classname == null || methodname == null)
+                continue;
 
-                // Check for failures/errors in the SUITE
-                if (content.contains("<failure") || content.contains("<error")) {
+            String simpleClassName = classname.substring(classname.lastIndexOf('.') + 1);
+            String fullName = simpleClassName + "." + methodname;
+
+            String status = "✅ PASS";
+
+            if (!isEmptyTag) {
+                String body = matcher.group(2);
+                if (body.contains("<failure") || body.contains("<error")) {
                     status = "❌ FAIL";
                 }
-
-                results.put(fullName, status);
+            } else {
+                // For empty tags, we already know it didn't have immediate child failures in
+                // the body
+                // but some reporters might put failure as an attribute? (Usually not in JUnit
+                // XML)
             }
-        }
 
-        updateRtmFile(results);
+            results.put(fullName, status);
+        }
     }
 
     private static String getAttribute(String text, String key) {
@@ -82,24 +101,28 @@ public class RtmUpdater {
         int updateCount = 0;
 
         for (String line : lines) {
-            if (line.contains("|") && line.contains("REQ-")) {
-                for (Map.Entry<String, String> entry : results.entrySet()) {
-                    String method = entry.getKey(); // MoneyTest.testMultiplication
-                    String status = entry.getValue();
+            String processedLine = line;
+            if (line.contains("|") && line.contains("`")) {
+                // Find all `TestClass.testMethod` patterns in the line
+                Pattern testRefPattern = Pattern.compile("`([A-Za-z0-9_]+\\.[A-Za-z0-9_]+)`");
+                Matcher matcher = testRefPattern.matcher(line);
 
-                    if (line.contains("`" + method + "`")) {
-                        // Replace the status column (assuming it's the last one)
-                        // Regex: Replace content after the last pipe before the closing pipe
-                        line = line.replaceAll("\\|\\s*[^|]+\\s*\\|$", "| " + status + " |");
-                        updateCount++;
-                        break;
-                    }
+                if (matcher.find()) {
+                    String testName = matcher.group(1);
+                    String status = results.getOrDefault(testName, "❓ NO_REPORT");
+
+                    // Replace the status column (last valid column)
+                    processedLine = line.replaceAll("\\|\\s*[^|]*\\s*\\|$", "| " + status + " |");
+                    updateCount++;
                 }
             }
-            newLines.add(line);
+            newLines.add(processedLine);
         }
 
         Files.write(rtmPath, newLines);
         System.out.println("✅ RTM Updated: " + updateCount + " rows processed.");
+        if (results.isEmpty()) {
+            System.out.println("💡 Note: No test results were found in current reports.");
+        }
     }
 }
