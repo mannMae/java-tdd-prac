@@ -9,8 +9,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MoneyTest {
     @Test
     public void testMultiplication() {
+        // Gherkin: Given 현재 지갑에 "5" "USD"가 들어있다
         Money five = new Dollar(5);
+
+        // Gherkin: When 금액을 "2"배로 불린다
         Money product = five.times(2);
+
+        // Gherkin: Then 결과는 "10" "USD"가 되어야 한다
         assertEquals(new Dollar(10), product);
     }
 }
