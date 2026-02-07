@@ -24,3 +24,10 @@
 }
 -->
 [//]: # ()
+
+## Traceability Matrix
+
+| ID | Feature | Specs | Tests | Status |
+|:---|:---|:---|:---|:---|
+| SPEC-FLOW-001 | 단일 통화 곱셈 (Visual) | [UC-001](docs/specs/money-calculation.md#L3) | `MoneyTest` | ✅ Verified |
+| SPEC-GERKIN-001 | 단일 통화 곱셈 (Logical) | [BDD-001](docs/specs/money-calculation.md#L14) | `MoneyTest` | ✅ Verified |
