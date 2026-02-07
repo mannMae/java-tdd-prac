@@ -12,7 +12,9 @@ description: Antigravity + LLM을 활용한 표준 QMS(Quality Management System
 3. **Plan 제안**: AG가 `implementation_plan.md`를 생성하여 사용자에게 전체 설계와 QMS 준수 방안을 보고합니다.
 
 ## 2. Execution: TDD with Traceability
-1. **Red (Fail)**: `@Trace SPEC-ID`를 포함한 테스트 코드를 작성합니다. 이때 **Gherkin 시나리오를 한 줄씩 주석으로 삽입**하고 그 아래에 실행 코드를 작성합니다.
+1. **Red (Fail)**: `@Trace SPEC-ID`를 포함한 테스트 코드를 작성합니다.
+   - **Test Granularity (중요)**: 하나의 요구사항(`REQ-ID`)이나 거킨 시나리오가 반드시 하나의 테스트 메서드와 1:1 매핑될 필요는 없습니다. 
+   - **Fan-out**: 하나의 거킨 시나리오를 검증하기 위해 여러 개의 유닛 테스트(Happy path, Edge case, Negative test 등)가 생성될 수 있으며, 이 모든 테스트가 통과해야 해당 요구사항이 `Verified` 됩니다.
 2. **Green (Pass)**: 테스트를 통과시키는 최소한의 구현을 진행합니다.
 3. **Refactor**: 코드를 정돈하고 전체 테스트 성공을 확인합니다.
 

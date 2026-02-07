@@ -14,6 +14,18 @@
                 "logical": "docs/specs/money-calculation.md#L14"
             },
             "tests": ["com.inc.tdd_practice.MoneyTest"],
+            "status": "Verified",
+            "approver": "gimjaeman",
+            "approval_date": "2026-02-07"
+        },
+        {
+            "id": "REQ-MONEY-002",
+            "feature": "통화 동치성 (Equality)",
+            "specs": {
+                "visual": "docs/specs/money-equality.md#L3",
+                "logical": "docs/specs/money-equality.md#L11"
+            },
+            "tests": ["com.inc.tdd_practice.MoneyTest"],
             "status": "Verified"
         }
     ]
@@ -26,7 +38,7 @@
 
 ## 6. Regulatory Compliance (규제 대응)
 외부 규제 담당자(Auditor)에게 시스템을 소명할 때 다음을 근거로 사용합니다:
-1. **Approval Metadata**: RTM 하단의 `Approver`와 `Date` 필드는 사람이 직접 검토하고 승인했음을 증명합니다.
+1. **Approval Metadata**: RTM 하단의 `Approver` 필드는 **실제 검토 및 승인을 수행한 담당자의 ID (예: Git/GitHub 계정명)**를 기재합니다. 이는 기술적 검증(AI)과 품질 승인(사람)이 분리되어 통제되고 있음을 증명합니다.
 2. **Commit History (Immutable Audit Trail)**: Git 커밋 메시지에 포함된 Spec ID와 작업 내역은 "누가, 언제, 어떤 명세를 근거로 코드를 바꿨는지"에 대한 **위변조 불가능한 기록**이 됩니다.
 3. **Walkthrough Evidence**: AG가 생성한 `walkthrough.md`는 해당 시점의 테스트 성공 결과를 담은 공식 증적(Evidence) 역할을 합니다.
 
@@ -35,3 +47,4 @@
 | ID | Feature | Visual (User Flow) | Logical (Gherkin) | Tests | Status | Approver | Approval Date |
 |:---|:---|:---|:---|:---|:---|:---|:---|
 | REQ-MONEY-001 | 단일 통화 곱셈 | [UC-001](./specs/money-calculation.md#L3) | [BDD-001](./specs/money-calculation.md#L14) | `MoneyTest` | ✅ Verified | `gimjaeman` | 2026-02-07 |
+| REQ-MONEY-002 | 통화 동치성 (Equality) | [UC-002](./specs/money-equality.md#L3) | [BDD-002](./specs/money-equality.md#L11) | `MoneyTest` | ✅ Verified | | |
