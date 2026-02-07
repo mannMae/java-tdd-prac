@@ -8,7 +8,10 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class MoneyTest {
     @Test
-    public void testMultiplication() {
+    /**
+     * @Trace SPEC-FLOW-001 (Multiplication)
+     */
+    public void test_MoneyMultiplication_Scenario() {
         // Gherkin: Given 현재 지갑에 "5" "USD"가 들어있다
         Money five = new Dollar(5);
 
@@ -21,9 +24,9 @@ public class MoneyTest {
 
     @Test
     /**
-     * @Trace REQ-MONEY-002
+     * @Trace SPEC-FLOW-002 (Equality)
      */
-    public void testEquality() {
+    public void test_MoneyEquality_Scenario() {
         // Gherkin: Given 현재 지갑에 "5" "USD"가 들어있다
         Money five = new Dollar(5);
 

@@ -46,5 +46,5 @@
 
 | ID | Feature | Visual (User Flow) | Logical (Gherkin) | Tests | Status | Approver | Approval Date |
 |:---|:---|:---|:---|:---|:---|:---|:---|
-| REQ-MONEY-001 | 단일 통화 곱셈 | [UC-001](./specs/money-calculation.md#L3) | [BDD-001](./specs/money-calculation.md#L14) | `MoneyTest` | ✅ Verified | `gimjaeman` | 2026-02-07 |
-| REQ-MONEY-002 | 통화 동치성 (Equality) | [UC-002](./specs/money-equality.md#L3) | [BDD-002](./specs/money-equality.md#L11) | `MoneyTest` | ✅ Verified | | |
+| REQ-MONEY-001 | 단일 통화 곱셈 | [UC-001](./specs/money-calculation.md#L3) | [BDD-001](./specs/money-calculation.md#L14) | `test_MoneyMultiplication_Scenario` | ✅ Verified | `gimjaeman` | 2026-02-07 |
+| REQ-MONEY-002 | 통화 동치성 (Equality) | [UC-002](./specs/money-equality.md#L3) | [BDD-002](./specs/money-equality.md#L11) | `test_MoneyEquality_Scenario` | ✅ Verified | | |
