@@ -17,4 +17,20 @@ public class MoneyTest {
         // Then the result should be 10 Dollars
         assertThat(five.amount).isEqualTo(10);
     }
+
+    @Test
+    void testEquality() {
+        // [SPEC-MONEY-002]
+        // Scenario: Compare same currency and amount
+        // Given I have a "Dollar" amount of 5
+        // And I have another "Dollar" amount of 5
+        // Then they should be equal
+        assertThat(new Dollar(5)).isEqualTo(new Dollar(5));
+
+        // Scenario: Compare different amounts
+        // Given I have a "Dollar" amount of 5
+        // And I have another "Dollar" amount of 6
+        // Then they should not be equal
+        assertThat(new Dollar(5)).isNotEqualTo(new Dollar(6));
+    }
 }
