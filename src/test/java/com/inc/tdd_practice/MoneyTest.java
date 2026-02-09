@@ -33,4 +33,18 @@ public class MoneyTest {
         // Then they should not be equal
         assertThat(new Dollar(5)).isNotEqualTo(new Dollar(6));
     }
+
+    @Test
+    void testFrancMultiplication() {
+        // [SPEC-MONEY-003]
+        // Scenario: Multiply franc amounts
+        // Given I have a "Franc" amount of 5
+        Franc five = new Franc(5);
+
+        // When I multiply it by 2
+        five.times(2);
+
+        // Then the result should be 10 Francs
+        assertThat(five.amount).isEqualTo(10);
+    }
 }
